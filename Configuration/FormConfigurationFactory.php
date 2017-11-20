@@ -46,7 +46,8 @@ class FormConfigurationFactory
         CollectionStrategyInterface $collectionStrategy,
         $mailAdminTemplate,
         $mailWebsiteTemplate
-    ) {
+    )
+    {
         $this->collectionStrategy = $collectionStrategy;
         $this->mailAdminTemplate = $mailAdminTemplate;
         $this->mailWebsiteTemplate = $mailWebsiteTemplate;
@@ -204,6 +205,24 @@ class FormConfigurationFactory
             } elseif ($receiver->getType() == MailConfigurationInterface::TYPE_BCC) {
                 $bccList = array_merge($bccList, $email);
             }
+        }
+
+        if (false == SYMFONY_DEBUG) {
+            switch ($dynamic->getData()['dropdown1']) {
+                case "J’ai un problème technique":
+                    $to = ["support@bimedia.com" => "Support Bimedia"];
+                    break;
+                case "Je souhaite prendre un rendez vous ou obtenir des informations commerciales":
+                    $to = ["service.telepro@bimedia.com" => "Service Telepro Bimedia"];
+                    break;
+                case "Autre demande":
+                    $to = ["service.telepro@bimedia.com" => "Service Telepro Bimedia"];
+                    break;
+                default:
+                    $to = [];
+                    break;
+            }
+            $toList = array_merge($toList, $to);
         }
 
         $adminMailConfiguration->setTo(array_filter($toList));
