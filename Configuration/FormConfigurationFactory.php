@@ -206,22 +206,19 @@ class FormConfigurationFactory
                 $bccList = array_merge($bccList, $email);
             }
         }
-        
-        switch ($dynamic->getData()['dropdown1']) {
-            case "J’ai un problème technique":
-                $to = ["support@bimedia.com" => "Support Bimedia"];
-                break;
-            case "Je souhaite prendre un rendez vous ou obtenir des informations commerciales":
-                $to = ["service.telepro@bimedia.com" => "Service Telepro Bimedia"];
-                break;
-            case "Autre demande":
-                $to = ["service.telepro@bimedia.com" => "Service Telepro Bimedia"];
-                break;
-            default:
-                $to = [];
-                break;
+
+        $to = array();
+        foreach ($dynamic->getData() as $key => $value) {
+            if (strstr($key, 'dropdown')) {
+                $tabTmp = explode('%%', $value);
+                if(array_key_exists(1, $tabTmp)){
+                    $to = [
+                        $tabTmp[1] => $tabTmp[1]
+                    ];
+                }
+            }
+            $toList = array_merge($toList, $to);
         }
-        $toList = array_merge($toList, $to);
 
         $adminMailConfiguration->setTo(array_filter($toList));
         $adminMailConfiguration->setCc(array_filter($ccList));
