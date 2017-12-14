@@ -174,7 +174,7 @@ class Handler implements HandlerInterface
             $configuration->getFrom(),
             true,
             $configuration->getReplyTo(),
-            $configuration->getAddAttachments() ? $this->attributes : [],
+            $configuration->getAddAttachments() ? $this->attachments : [],
             $configuration->getCc(),
             $configuration->getBcc()
         );
