@@ -62,13 +62,14 @@ class DynamicFormType extends AbstractType
 
         if (!$translation = $formEntity->getTranslation($locale)) {
             throw new \Exception(
-                sprintf('The form with the ID "%s" does not exist for the locale "%"!', $formEntity->getId(), $locale)
+                sprintf('The form with the ID "%s" does not exist for the locale "%s"!', $formEntity->getId(), $locale)
             );
         }
 
         $currentWidthValue = 0;
+        $fields = $formEntity->getFields();
 
-        foreach ($formEntity->getFields() as $field) {
+        foreach ($fields as $key => $field) {
             $fieldTranslation = $field->getTranslation($locale);
             $options = ['constraints' => [], 'attr' => [], 'required' => false];
 
@@ -88,7 +89,13 @@ class DynamicFormType extends AbstractType
                 $width = $field->getWidth();
             }
 
-            $lastWidth = $this->getLastWidth($currentWidthValue, $width);
+            $nextField = null;
+            $nextWidth = 'full';
+            if (isset($fields[$key + 1])) {
+                $nextWidth = $fields[$key + 1]->getWidth();
+            }
+
+            $lastWidth = $this->getLastWidth($currentWidthValue, $width, $nextWidth);
 
             $options['label'] = $title ?: false;
             $options['required'] = $field->getRequired();
@@ -137,7 +144,19 @@ class DynamicFormType extends AbstractType
         ]);
 
         // Add submit button.
-        $builder->add('submit', SubmitType::class, ['label' => $translation->getSubmitLabel()]);
+        $builder->add(
+            'submit',
+            SubmitType::class,
+            [
+                'label' => $translation->getSubmitLabel(),
+                'attr' => [
+                    'width' => 'full',
+                    'widthNumber' => $this->getItemWidthNumber('full'),
+                    'lastWidth' => true,
+                    'placeholder' => '',
+                ],
+            ]
+        );
     }
 
     /**
@@ -214,16 +233,25 @@ class DynamicFormType extends AbstractType
      *
      * @param int $currentWidthValue
      * @param string $width
+     * @param string $nextWidth
      *
      * @return bool
      */
-    private function getLastWidth(&$currentWidthValue, $width)
+    private function getLastWidth(&$currentWidthValue, $width, $nextWidth)
     {
-        $itemWidth = $this->getItemWidthNumber($width);
+        $widthNumber = $this->getItemWidthNumber($width);
+        $nextWidthNumber = $this->getItemWidthNumber($nextWidth);
 
-        $currentWidthValue += $itemWidth;
+        $currentWidthValue += $widthNumber;
 
-        if ($currentWidthValue % 12 == 0) {
+        if (0 == $currentWidthValue % 12) {
+            return true;
+        }
+
+        // if next item has no space in current row the current item is last
+        if (($currentWidthValue % 12) + $nextWidthNumber > 12) {
+            $currentWidthValue += 12 - $currentWidthValue % 12;
+
             return true;
         }
 

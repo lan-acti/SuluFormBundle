@@ -30,40 +30,13 @@ class TemplateController extends Controller
      */
     public function formAction(Request $request)
     {
-        $widths = [
-            [
-                'id' => 'full',
-                'name' => 'sulu_form.width.full',
-            ],
-            [
-                'id' => 'half',
-                'name' => 'sulu_form.width.half',
-            ],
-            [
-                'id' => 'one-third',
-                'name' => 'sulu_form.width.one-third',
-            ],
-            [
-                'id' => 'two-thirds',
-                'name' => 'sulu_form.width.two-thirds',
-            ],
-            [
-                'id' => 'one-quarter',
-                'name' => 'sulu_form.width.one-quarter',
-            ],
-            [
-                'id' => 'three-quarters',
-                'name' => 'sulu_form.width.three-quarters',
-            ],
-            [
-                'id' => 'one-sixth',
-                'name' => 'sulu_form.width.one-sixth',
-            ],
-            [
-                'id' => 'five-sixths',
-                'name' => 'sulu_form.width.five-sixths',
-            ],
-        ];
+        $widths = [];
+        foreach ($this->getParameter('sulu_form.dynamic_widths') as $id => $name) {
+            $widths[] = [
+                'id' => $id,
+                'name' => $name,
+            ];
+        }
 
         $types = $this->get('sulu_form.dynamic.form_field_type_pool')->all();
         $receiverTypes = [
@@ -78,6 +51,8 @@ class TemplateController extends Controller
                 'types' => $this->getSortedTypes($types),
                 'widths' => $widths,
                 'receiverTypes' => $receiverTypes,
+                'locale' => $request->get('locale', $request->getLocale()),
+                'autoTitle' => $this->getParameter('sulu_form.dynamic_auto_title'),
                 'fallbackEmails' => [
                     'from' => $this->getParameter('sulu_form.mail.from'),
                     'to' => $this->getParameter('sulu_form.mail.to'),
@@ -91,7 +66,7 @@ class TemplateController extends Controller
      *
      * @return FormFieldTypeInterface[]
      */
-    public function getSortedTypes($types = [])
+    private function getSortedTypes($types = [])
     {
         /** @var Translator $translator */
         $translator = $this->get('translator');
@@ -103,7 +78,11 @@ class TemplateController extends Controller
         $i = 0;
         foreach ($types as $alias => $type) {
             $translation = $translator->trans($type->getConfiguration()->getTitle(), [], 'backend', $locale);
-            $sortedTypes[$translation . $i] = ['alias' => $alias, 'type' => $type];
+            $group = $type->getConfiguration()->getGroup();
+            $sortedTypes[$group . '_' . $translation . '_' . $i] = [
+                'alias' => $alias,
+                'type' => $type,
+            ];
             ++$i;
         }
 

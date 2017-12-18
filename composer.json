@@ -5,9 +5,24 @@
     "require": {
         "symfony/symfony": "^2.8.7 || ^3.0",
         "symfony/swiftmailer-bundle": "~2.3",
-        "doctrine/orm": "2.5.*",
+        "doctrine/orm": "^2.5.3",
         "php": "^5.5 || ^7.0",
-        "sulu/sulu": "~1.3 || dev-develop"
+        "sulu/sulu": "~1.3"
+    },
+    "require-dev": {
+        "jackalope/jackalope-doctrine-dbal": "^1.2.5",
+        "symfony/monolog-bundle": "^2.8.7 || ^3.0",
+        "massive/search-bundle": "@dev",
+        "zendframework/zend-stdlib": "~2.3",
+        "zendframework/zendsearch": "@dev",
+        "doctrine/doctrine-bundle": "^1.4",
+        "phpunit/phpunit": ">=4.8, <6.0",
+        "excelwebzone/recaptcha-bundle": "^1.4.2",
+        "drewm/mailchimp-api": "^2.2"
+    },
+    "suggest": {
+        "excelwebzone/recaptcha-bundle": "Allows to add recaptcha to any dynamic form",
+        "drewm/mailchimp-api": "Allows to add a newsletter subscription over mailchimp to any dynamic form"
     },
     "keywords": [
         "sulu",
@@ -26,6 +41,14 @@
     "autoload": {
         "psr-4": {
             "Sulu\\Bundle\\FormBundle\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sulu\\Bundle\\FormBundle\\Tests\\": "Tests"
         }
     }
 }

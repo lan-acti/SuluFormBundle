@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.0 (unreleased)
+
+ - FEATURE     #118    Add phpstan analyzer with level 2
+ - FEATURE     #116    Fixed unkown parameter secret by using kernel.secret parameter
+ - FEATURE     #115    Fixed grid width around submit button
+ - FEATURE     #114    Fixed grid row around submit button
+ - FEATURE     #113    Fixed last width when next has no place
+ - FEATURE     #109    Add symfony 3 to test runs
+ - FEATURE     #108    Add widths to bundle configuration
+ - FEATURE     #107    Add title automatically to new added block
+ - FEATURE     #106    Add grouped types to admin blocks
+ - ENHANCEMENT #105    Add functional api tests
+ - FEATURE     #104    Add search to dynamic list
+ - ENHANCEMENT #103    Add test setup 
+
 ## 0.3.2
 
  - HOTFIX     #102    Fixed error when form is loaded without structure in request

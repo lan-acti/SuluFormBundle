@@ -1,5 +1,15 @@
 # Upgrade
 
+## 0.4.0
+
+### BC Breaks
+
+The internal api changed
+
+`Sulu\Bundle\FormBundle\Controller\TemplateController::getSortedTypes` is not longer public available
+POST /api/forms/{id} will return 201 instead of 200 status code.
+DELETE /api/forms/{id} will return 204 no content instead of 200 status code.
+
 ## 0.3.1
 
  - `Sulu\Bundle\FormBundle\Mail\HelperInterface::getReceiverTypes` unused function was removed.

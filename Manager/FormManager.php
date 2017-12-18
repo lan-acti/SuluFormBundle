@@ -31,7 +31,7 @@ class FormManager
     /**
      * @var FormRepository
      */
-    protected $repository;
+    protected $formRepository;
 
     /**
      * EventManager constructor.
@@ -107,10 +107,10 @@ class FormManager
         $translation->setMailText(self::getValue($data, 'mailText'));
         $translation->setSubmitLabel(self::getValue($data, 'submitLabel'));
         $translation->setSuccessText(self::getValue($data, 'successText'));
-        $translation->setSendAttachments(self::getValue($data, 'sendAttachments'));
-        $translation->setDeactivateNotifyMails(self::getValue($data, 'deactivateNotifyMails'));
-        $translation->setDeactivateCustomerMails(self::getValue($data, 'deactivateCustomerMails'));
-        $translation->setReplyTo(self::getValue($data, 'replyTo'));
+        $translation->setSendAttachments(self::getValue($data, 'sendAttachments', false));
+        $translation->setDeactivateNotifyMails(self::getValue($data, 'deactivateNotifyMails', false));
+        $translation->setDeactivateCustomerMails(self::getValue($data, 'deactivateCustomerMails', false));
+        $translation->setReplyTo(self::getValue($data, 'replyTo', false));
         $translation->setChanged(new \DateTime());
 
         // Add Translation to Form.
@@ -239,7 +239,7 @@ class FormManager
             $prefix = 'options[';
 
             $keys = array_filter(array_keys($fieldData), function ($key) use ($prefix) {
-                return strpos($key, $prefix) === 0;
+                return 0 === strpos($key, $prefix);
             });
 
             $options = array_intersect_key($fieldData, array_flip($keys));
@@ -283,7 +283,7 @@ class FormManager
     protected static function getValue($data, $value, $default = null, $type = null)
     {
         if (isset($data[$value])) {
-            if ($type === 'date') {
+            if ('date' === $type) {
                 if (!$data[$value]) {
                     return $default;
                 }
