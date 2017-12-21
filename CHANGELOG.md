@@ -1,6 +1,21 @@
 # Changelog
 
-## 0.4.0 (unreleased)
+## 1.0.0-RC2
+
+ - BUGFIX      #132    Fix boolean values in list
+ - FEATURE     #132    Add id to search fields in form and dynamic list
+ - ENHANCEMENT #131    Add created date to list view
+ - BUGFIX      #130    Fixed csv export for big results
+ - FEATURE     #129    Add disabled field type configuration
+
+## 1.0.0-RC1
+
+ - BUGFIX      #126    Fixed handle of medias in email template
+ - BUGFIX      #125    Fixed attachment for medias in email
+ - FEATURE     #124    Fixed date field in list view
+ - ENHANCEMENT #122    Update french translations
+
+## 0.4.0
 
  - FEATURE     #118    Add phpstan analyzer with level 2
  - FEATURE     #116    Fixed unkown parameter secret by using kernel.secret parameter
@@ -14,6 +29,7 @@
  - ENHANCEMENT #105    Add functional api tests
  - FEATURE     #104    Add search to dynamic list
  - ENHANCEMENT #103    Add test setup 
+ - HOTFIX      #120    Fix database update for 0.2 version in UPGRADE.md
 
 ## 0.3.2
 

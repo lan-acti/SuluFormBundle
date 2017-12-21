@@ -53,11 +53,10 @@ class DynamicListFactory implements DynamicListFactoryInterface
             }
 
             $title = '';
-
             $translation = $field->getTranslation($locale);
 
             if ($translation) {
-                $title = $translation->getTitle();
+                $title = $translation->getShortTitle() ?: $translation->getTitle();
             }
 
             $fieldDescriptors[$field->getKey()] = new FieldDescriptor(
@@ -65,7 +64,7 @@ class DynamicListFactory implements DynamicListFactoryInterface
                 $title,
                 false,
                 true,
-                'date' == $field->getType() ? 'date' : '',
+                '',
                 '',
                 '',
                 false // not sortable
@@ -91,7 +90,9 @@ class DynamicListFactory implements DynamicListFactoryInterface
         $entries = [];
 
         foreach ($dynamics as $dynamic) {
-            $entries = array_merge($entries, $this->getBuilder($builder)->build($dynamic, $locale));
+            foreach ($this->getBuilder($builder)->build($dynamic, $locale) as $entry) {
+                $entries[] = $entry;
+            }
         }
 
         return $entries;
